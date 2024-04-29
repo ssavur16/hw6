@@ -82,6 +82,7 @@ std::set<std::string> boggle(const std::set<std::string>& dict, const std::set<s
 	{
 		for(unsigned int j=0;j<board.size();j++)
 		{
+			//std::cout << "checking letter " << board[i][j] << " at location " << i << "," << j << "\n";
 			boggleHelper(dict, prefix, board, "", result, i, j, 0, 1);
 			boggleHelper(dict, prefix, board, "", result, i, j, 1, 0);
 			boggleHelper(dict, prefix, board, "", result, i, j, 1, 1);
@@ -94,6 +95,32 @@ std::set<std::string> boggle(const std::set<std::string>& dict, const std::set<s
 bool boggleHelper(const std::set<std::string>& dict, const std::set<std::string>& prefix, const std::vector<std::vector<char> >& board, 
 								   std::string word, std::set<std::string>& result, unsigned int r, unsigned int c, int dr, int dc)
 {
-//add your solution here!
+	if((r == board.size()) || (c == board.size())) {
+		return false;
+	}
 
+  word.push_back(board[r][c]);
+	//std::cout << "word: " << word << "\n";
+
+  if(dict.find(word) != dict.end()) {
+    if(prefix.find(word) != prefix.end()) {
+      bool status = boggleHelper(dict, prefix, board, word, result, r+dr, c+dc, dr, dc);
+
+      if(!status) {
+        result.insert(word);
+        return true;
+      }
+    }
+		else {
+			result.insert(word);
+			return true;
+		}
+  }
+
+  bool status = boggleHelper(dict, prefix, board, word, result, r+dr, c+dc, dr, dc);
+  if(status) {
+    return true;
+  }
+
+	return false;
 }
